@@ -54,3 +54,21 @@ def spark_mock_df(spark):
     })
 
     return df, expect
+
+@pytest.fixture
+def spark_multi_column_mock_df(spark):
+
+    sdf = spark.createDataFrame(
+        data = [
+            ('001', 'a'),
+            ('002', 'b'),
+            ('003', 'C'),
+        ],
+        schema = T.StructType([
+            T.StructField('id', T.StringType(), False),
+            T.StructField('symbol', T.StringType(), False),
+        ])
+    )
+
+    return sdf
+
