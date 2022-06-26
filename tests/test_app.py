@@ -43,7 +43,7 @@ def test_pandas_add_column_fail_case():
     pd.testing.assert_frame_equal(actual, expect, check_exact=True)
 
 
-@pytest.mark.pandas    
+@pytest.mark.pandas
 def test_pandas_add_column_with_fixture(pandas_mock_df):
     
     # ARRANGE
@@ -68,7 +68,7 @@ def test_pandas_on_spark_add_column(spark, pandas_on_spark_mock_df):
     pd.testing.assert_frame_equal(actual, expect, check_exact=True)
 
 @pytest.mark.spark
-def test_spark_add_column(spark, spark_mock_df):
+def test_spark_add_column_pandas_testing(spark, spark_mock_df):
     
     # ARRANGE
     df, expect = spark_mock_df
@@ -80,16 +80,16 @@ def test_spark_add_column(spark, spark_mock_df):
     pd.testing.assert_frame_equal(actual, expect, check_exact=True)
 
 @pytest.mark.spark
-def test_spark_add_column_chispa(spark, spark_mock_df_chispa):
+def test_spark_add_column_pandas_testing_failed(spark, spark_mock_df_failed):
     
     # ARRANGE
-    df, expect = spark_mock_df_chispa
+    df, expect = spark_mock_df_failed
 
     # ACT
-    actual = spark_add_column(df)
+    actual = spark_add_column(df).toPandas()
 
     # ASSERT
-    assert_df_equality(actual, expect)
+    pd.testing.assert_frame_equal(actual, expect, check_exact=True)
 
 @pytest.mark.spark
 def test_spark_add_column_chispa(spark, spark_mock_df_chispa):

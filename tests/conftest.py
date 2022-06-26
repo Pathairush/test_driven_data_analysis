@@ -56,6 +56,25 @@ def spark_mock_df(spark):
     return df, expect
 
 @pytest.fixture
+def spark_mock_df_failed(spark):
+
+    df = spark.createDataFrame(
+        data = [
+            ('001'),
+            ('002'),
+            ('003')
+        ],
+        schema = T.StringType()
+    ).toDF('id')
+
+    expect = pd.DataFrame({
+        "id" : ['001', '002', '003'],
+        "new_column" : ['b', 'b', 'b']
+    })
+
+    return df, expect
+
+@pytest.fixture
 def spark_mock_df_chispa(spark):
 
     df = spark.createDataFrame(
