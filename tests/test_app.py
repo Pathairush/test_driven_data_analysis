@@ -4,6 +4,7 @@ import pyspark.pandas as ps
 import pytest
 from pyspark.sql import SparkSession
 import pyspark.sql.types as T
+from chispa.dataframe_comparer import assert_df_equality
 
 @pytest.mark.pandas
 def test_pandas_add_column():
@@ -22,6 +23,25 @@ def test_pandas_add_column():
 
     # ASSERT
     pd.testing.assert_frame_equal(actual, expect, check_exact=True)
+
+@pytest.mark.pandas
+def test_pandas_add_column_fail_case():
+    
+    # ARRANGE
+    df = pd.DataFrame({
+        "id" : ['001', '002', '003']
+    })
+
+    expect = pd.DataFrame({
+        "id" : ['001', '002', '003'],
+        "new_column" : ['b', 'b', 'b']
+    })
+    # ACT
+    actual = pandas_add_column(df)
+
+    # ASSERT
+    pd.testing.assert_frame_equal(actual, expect, check_exact=True)
+
 
 @pytest.mark.pandas    
 def test_pandas_add_column_with_fixture(pandas_mock_df):
@@ -58,6 +78,42 @@ def test_spark_add_column(spark, spark_mock_df):
 
     # ASSERT
     pd.testing.assert_frame_equal(actual, expect, check_exact=True)
+
+@pytest.mark.spark
+def test_spark_add_column_chispa(spark, spark_mock_df_chispa):
+    
+    # ARRANGE
+    df, expect = spark_mock_df_chispa
+
+    # ACT
+    actual = spark_add_column(df)
+
+    # ASSERT
+    assert_df_equality(actual, expect)
+
+@pytest.mark.spark
+def test_spark_add_column_chispa(spark, spark_mock_df_chispa):
+    
+    # ARRANGE
+    df, expect = spark_mock_df_chispa
+
+    # ACT
+    actual = spark_add_column(df)
+
+    # ASSERT
+    assert_df_equality(actual, expect)
+
+@pytest.mark.spark
+def test_spark_add_column_chispa_failed(spark, spark_mock_df_chispa_failed):
+    
+    # ARRANGE
+    df, expect = spark_mock_df_chispa_failed
+
+    # ACT
+    actual = spark_add_column(df)
+
+    # ASSERT
+    assert_df_equality(actual, expect)
 
 
 @pytest.mark.with_spark_context
